@@ -151,7 +151,7 @@ class FBPresence():
             If the device is registered with the FritzBox the method will return True if the device is present, False otherwise.
         """
         
-        devices, chk_ts = self.fb.getWLANDeviceInformation()
+        devices, chk_ts = self.getWLANDeviceInformation()
         
         if deviceName is not None:
             logger.debug("Check if the device " + deviceName + " is present")
@@ -193,7 +193,6 @@ class FBPresence():
         page = self.fb.loadFritzBoxPage('/data.lua', 'lang=de&no_sidrenew=&page=wSet')
 
         jsonStructure = json.loads(page.decode('UTF-8'))
-        
         jsonStructure_devices = jsonStructure['data']['net']['devices']
         
         for i in range(len(jsonStructure_devices)):
@@ -202,7 +201,7 @@ class FBPresence():
             
             self.deviceList[name] = {'on_ts' : on_ts}
                 
-        return self.deviceList, self.chk_ts
+        return self.deviceList
             
 
 #===============================================================================
@@ -212,7 +211,7 @@ def main():
     fbP = FBPresence(ip=args.ip, password=args.password)
     
     if (args.name == None):
-        devices, chk_ts = fbP.getWLANDeviceInformation()
+        devices = fbP.getWLANDeviceInformation()
         
         print(devices)
         
